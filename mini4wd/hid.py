@@ -35,6 +35,27 @@ else:
 hidapi.hid_init()
 atexit.register(hidapi.hid_exit)
 
+hidapi.hid_open.restype = ctypes.c_void_p
+hidapi.hid_open_path.restype = ctypes.c_void_p
+
+hidapi.hid_get_manufacturer_string.restype = ctypes.c_int
+hidapi.hid_get_manufacturer_string.argtypes = (ctypes.c_void_p,ctypes.c_wchar_p,ctypes.c_size_t)
+
+hidapi.hid_get_product_string.restype = ctypes.c_int
+hidapi.hid_get_product_string.argtypes = (ctypes.c_void_p,ctypes.c_wchar_p,ctypes.c_size_t)
+
+hidapi.hid_get_serial_number_string.restype = ctypes.c_int
+hidapi.hid_get_serial_number_string.argtypes = (ctypes.c_void_p,ctypes.c_wchar_p,ctypes.c_size_t)
+
+hidapi.hid_read.restype = ctypes.c_int
+hidapi.hid_read.argtypes = (ctypes.c_void_p,ctypes.c_char_p,ctypes.c_size_t)
+
+hidapi.hid_read_timeout.restype = ctypes.c_int
+hidapi.hid_read_timeout.argtypes = (ctypes.c_void_p,ctypes.c_char_p,ctypes.c_size_t,ctypes.c_int)
+
+
+hidapi.hid_write.restype = ctypes.c_int
+hidapi.hid_write.argtypes = (ctypes.c_void_p,ctypes.c_uint8,ctypes.c_size_t)
 
 class HIDException(Exception):
     pass
@@ -96,13 +117,13 @@ class Device(object):
 
         if self.__dev == 0:
             raise HIDException('unable to open device')
+        print self.__dev
 
     def __hidcall(self, function, *args, **kwargs):
         if self.__dev == 0:
             raise HIDException('device closed')
 
         ret = function(*args, **kwargs)
-
         if ret == -1:
             err = hidapi.hid_error(self.__dev)
             raise HIDException(err)
@@ -118,12 +139,11 @@ class Device(object):
 
     def read(self, size, timeout=None):
         data = ctypes.create_string_buffer(size)
-
         if timeout is None:
-            size = self.__hidcall(hidapi.hid_read, self.__dev, data, size)
+            size = self.__hidcall(hidapi.hid_read, self.__dev, data.raw, size)
         else:
             size = self.__hidcall(
-                hidapi.hid_read_timeout, self.__dev, data, size, timeout)
+                hidapi.hid_read_timeout, self.__dev, data.raw, size, timeout)
 
         return data.raw[:size]
 
