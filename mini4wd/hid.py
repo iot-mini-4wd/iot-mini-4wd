@@ -140,10 +140,10 @@ class Device(object):
     def read(self, size, timeout=None):
         data = ctypes.create_string_buffer(size)
         if timeout is None:
-            size = self.__hidcall(hidapi.hid_read, self.__dev, data.raw, size)
+            size = self.__hidcall(hidapi.hid_read, self.__dev, data, size)
         else:
             size = self.__hidcall(
-                hidapi.hid_read_timeout, self.__dev, data.raw, size, timeout)
+                hidapi.hid_read_timeout, self.__dev, data, size, timeout)
 
         return data.raw[:size]
 
