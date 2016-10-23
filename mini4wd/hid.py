@@ -55,7 +55,7 @@ hidapi.hid_read_timeout.argtypes = (ctypes.c_void_p,ctypes.c_char_p,ctypes.c_siz
 
 
 hidapi.hid_write.restype = ctypes.c_int
-hidapi.hid_write.argtypes = (ctypes.c_void_p,ctypes.c_uint8,ctypes.c_size_t)
+hidapi.hid_write.argtypes = (ctypes.c_void_p,ctypes.c_char_p,ctypes.c_size_t)
 
 class HIDException(Exception):
     pass
