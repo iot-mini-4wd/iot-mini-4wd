@@ -27,7 +27,7 @@ else:
         if pfname=="Darwin":
             hidapi = ctypes.cdll.LoadLibrary('libhidapi.dylib')
         elif pfname=="Windows":
-            hidapi = ctypes.windll.LoadLibrary('hidapi.dll')
+            hidapi = ctypes.cdll.LoadLibrary('hidapi.dll')
     except AttributeError:
         raise ImportError("Unable to load the HIDAPI library")
 
