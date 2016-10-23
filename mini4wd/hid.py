@@ -1,6 +1,11 @@
 import ctypes
 import atexit
 import platform
+import os
+
+pfname=platform.system()
+if pfname == "Windows":
+    os.environ["PATH"]=os.environ["PATH"] + ";" + os.path.dirname(__file__)
 
 __all__ = ['HIDException', 'DeviceInfo', 'Device', 'enumerate']
 
@@ -23,7 +28,6 @@ for lib in library_paths:
         pass
 else:
     try:
-        pfname=platform.system()
         if pfname=="Darwin":
             hidapi = ctypes.cdll.LoadLibrary('libhidapi.dylib')
         elif pfname=="Windows":
