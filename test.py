@@ -14,10 +14,10 @@ def _main():
         for dev in devs:
             dev_id=dev["id"]
         if dev_id: break
-    m.scan_stop()
     if not dev_id: return
 
     m.connect(dev_id)
+    m.scan_stop()
 
     while True:
         if m.info(dev_id)["state"]=="Connected": break
